@@ -1,98 +1,38 @@
-import api from './contact-service';
-import React, { useState, useEffect } from 'react';
+// src/App.js
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import ContactList from './components/ContactList/ContactList';
 import ContactForm from './components/ContactForm/ContactForm';
+import { loadContacts, setContactForEdit, addContact, updateContact, deleteContact } from './store/actions/contactActions';
 import './App.css';
 
 const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [contactForEdit, setContactForEdit] = useState(createEmptyContact());
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contacts);
+  const contactForEdit = useSelector(state => state.contacts.contactForEdit);
 
-  function createEmptyContact() {
-    return {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-    };
-  }
-
-  const saveState = (contacts) => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  };
-
-  
   useEffect(() => {
-		api.get('/').then(({ data }) => {
-			data ? setContacts(data) : setContacts([]);
-		});
-	}, []);
-  const deleteContact = (id) => {
-    setContacts((prevContacts) => {
-      const updatedContacts = prevContacts.filter((contact) => contact.id !== id);
-      saveState(updatedContacts);
-      return updatedContacts;
-    });
-  
-    api.delete(`/${id}`)
-      .then(response => {
-      })
-      .catch(error => {
-      });
-  };
-  
+    dispatch(loadContacts());
+  }, [dispatch]);
 
- 
-
-  const addNewContact = () => {
-    setContactForEdit(createEmptyContact());
+  const handleDeleteContact = (id) => {
+    dispatch(deleteContact(id));
   };
 
-  const selectContact = (contact) => {
-    setContactForEdit(contact);
+  const handleAddNewContact = () => {
+    dispatch(setContactForEdit(null));
   };
 
-  
-    
+  const handleSelectContact = (contact) => {
 
-  const createContact = (contact) => {
-    const newContact = { ...contact, id: Date.now() }; // Создаем новый объект контакта с добавленным полем id
-  
-    setContacts((prevContacts) => [...prevContacts, newContact]);
-    setContactForEdit(createEmptyContact());
-  
-    api.post('/', newContact)
-      .then(response => {
-      })
-      .catch(error => {
-      });
+    dispatch(setContactForEdit(contact));
   };
-  
 
-  
-
-  const updateContact = (contact) => {
-    setContacts((prevContacts) => {
-      const updatedContacts = prevContacts.map((item) => (item.id === contact.id ? contact : item));
-      saveState(updatedContacts);
-      return updatedContacts;
-    });
-  
-    api.put(`/${contact.id}`, contact)
-      .then(response => {
-      })
-      .catch(error => {
-      });
-  
-    setContactForEdit(contact);
-  };
-  
-
-  const saveContact = (contact) => {
+  const handleSaveContact = (contact) => {
     if (!contact.id) {
-      createContact(contact);
+      dispatch(addContact(contact));
     } else {
-      updateContact(contact);
+      dispatch(updateContact(contact));
     }
   };
 
@@ -102,15 +42,15 @@ const App = () => {
       <div className='main'>
         <ContactList
           contacts={contacts}
-          onDelete={deleteContact}
-          onAddContact={addNewContact}
-          onEditContact={selectContact}
+          onDelete={handleDeleteContact}
+          onAddContact={handleAddNewContact}
+          onEditContact={handleSelectContact}
         />
         <ContactForm
-          key={contactForEdit.id}
+          key={contactForEdit?.id}
           contactForEdit={contactForEdit}
-          onSubmit={saveContact}
-          onDelete={deleteContact}
+          onSubmit={handleSaveContact}
+          onDelete={handleDeleteContact}
         />
       </div>
     </div>

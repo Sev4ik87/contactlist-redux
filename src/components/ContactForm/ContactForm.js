@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { addContact, deleteContact } from '../../store/actions/contactActions';
 import './ContactForm.css';
 
 const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
-  const [contact, setContact] = useState({ ...contactForEdit });
+  const [contact, setContact] = useState({});
 
   useEffect(() => {
-    setContact({ ...contactForEdit });
+    
+      console.log("Contact for edit:", contactForEdit);
+      setContact({ ...contactForEdit });
+    
   }, [contactForEdit]);
+  
 
   const createEmptyContact = () => {
     return {
@@ -20,6 +26,7 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
 
   const onInputChange = (e) => {
     const { name, value } = e.target;
+
     setContact((prevContact) => ({
       ...prevContact,
       [name]: value,
@@ -34,8 +41,11 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
   };
 
   const onFormSubmit = (e) => {
+
     e.preventDefault();
-    onSubmit({ ...contact });
+    console.log("Form submitted. Contact:", contact);
+
+    onSubmit(contact);
   };
 
   const onContactDelete = () => {
@@ -120,4 +130,14 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
   );
 };
 
-export default ContactForm;
+// Функция для связывания компонента с Redux хранилищем
+const mapStateToProps = (state) => ({
+  contactForEdit: state.contacts.contactForEdit,
+});
+
+const mapDispatchToProps = {
+  onSubmit: addContact, // Подразумевается, что в store/actions/contactActions.js есть функция addContact, которая добавляет новый контакт
+  onDelete: deleteContact, // Подразумевается, что в store/actions/contactActions.js есть функция deleteContact, которая удаляет контакт
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);

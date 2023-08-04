@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import ContactItem from '../ContactItem/ContactItem';
 import './ContactList.css';
 
@@ -8,10 +9,10 @@ const ContactList = ({ contacts, onDelete, onEditContact, onAddContact }) => {
       <div className='item-container'>
         {contacts.map((contact) => (
           <ContactItem
-            key={contact.id}
-            contact={contact}
-            onDelete={onDelete}
-            onEdit={onEditContact}
+          key={contact.id}
+          contact={contact}
+          onDelete={onDelete}
+          onEdit={onEditContact}
           />
         ))}
       </div>
@@ -22,4 +23,8 @@ const ContactList = ({ contacts, onDelete, onEditContact, onAddContact }) => {
   );
 };
 
-export default ContactList;
+const mapStateToProps = (state) => ({
+  contacts: state.contacts, 
+});
+
+export default connect(mapStateToProps)(ContactList);
