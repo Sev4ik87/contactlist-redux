@@ -130,14 +130,13 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
   );
 };
 
-// Функция для связывания компонента с Redux хранилищем
 const mapStateToProps = (state) => ({
   contactForEdit: state.contacts.contactForEdit,
 });
 
 const mapDispatchToProps = {
-  onSubmit: addContact, // Подразумевается, что в store/actions/contactActions.js есть функция addContact, которая добавляет новый контакт
-  onDelete: deleteContact, // Подразумевается, что в store/actions/contactActions.js есть функция deleteContact, которая удаляет контакт
+  onSubmit: addContact, 
+  onDelete: deleteContact, 
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
