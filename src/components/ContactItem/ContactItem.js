@@ -1,14 +1,20 @@
 import React from 'react';
 import './ContactItem.css';
+import {  useDispatch, useSelector } from 'react-redux';
+import {
+  deleteContact,
+  selectContact,
+} from '../../store/actions/contactActions'
 
-const ContactItem = ({ contact, onDelete, onEdit }) => {
+function ContactItem ({ contact}) {
+const dispatch = useDispatch();
+
   const onItemDelete = () => {
-    onDelete(contact.id);
+    dispatch(deleteContact(contact.id));
   };
 
   const onContactEdit = () => {
-    onEdit(contact);
-  };
+dispatch(selectContact(contact))  };
 
   return (
     <div className='contact-item'>

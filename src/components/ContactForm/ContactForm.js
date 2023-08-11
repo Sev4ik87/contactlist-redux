@@ -1,56 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { addContact, deleteContact } from '../../store/actions/contactActions';
+import {  useDispatch, useSelector } from 'react-redux';
+import { createContact, deleteContact,updateContact } from '../../store/actions/contactActions';
+import API from '../../contact-service';
 import './ContactForm.css';
 
-const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
-  const [contact, setContact] = useState({});
+function ContactForm() {
+const contactForEdit= useSelector((store)=>store.contactForEdit);
+const dispatch = useDispatch();
+const [editContact,setEditContact] = useState(contactForEdit);
 
   useEffect(() => {
-    
-      console.log("Contact for edit:", contactForEdit);
-      setContact({ ...contactForEdit });
-    
+  setEditContact(contactForEdit);
   }, [contactForEdit]);
   
 
-  const createEmptyContact = () => {
-    return {
-      id: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-    };
-  };
+  
 
   const onInputChange = (e) => {
-    const { name, value } = e.target;
-
-    setContact((prevContact) => ({
-      ...prevContact,
-      [name]: value,
-    }));
+setEditContact({...editContact,[e.target.name]:e.target.value});
   };
 
-  const onClearField = (fieldName) => {
-    setContact((prevContact) => ({
-      ...prevContact,
-      [fieldName]: '',
-    }));
+
+
+  const onClearField = (e) => {
+    const sibling = e.target.parentNode.firstChild;
+    setEditContact({...editContact,[sibling.name]:''});
   };
 
   const onFormSubmit = (e) => {
-
-    e.preventDefault();
-    console.log("Form submitted. Contact:", contact);
-
-    onSubmit(contact);
-  };
+  e.preventDefault();
+  if(!editContact.id) {
+API.post('/',editContact).then(({data})=>{
+  dispatch(createContact(data));
+});
+  }else{
+   API.put('/$(editContact.id)',editContact) 
+   .then(({data})=>dispatch(updateContact(data)))
+  }
+}; 
+  
 
   const onContactDelete = () => {
-    onDelete(contact.id);
-    setContact(createEmptyContact());
+   API.delete('/$(editContact.id)').then(({status})=>
+   console.log(status));
+   dispatch(deleteContact(editContact.id));
   };
 
   return (
@@ -63,10 +56,10 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
             placeholder='First name'
             required
             name='firstName'
-            value={contact.firstName}
+            value={editContact.firstName}
             onChange={onInputChange}
           />
-          <span className='clear' onClick={() => onClearField('firstName')}>
+          <span className='clear' onClick={onClearField}>
             X
           </span>
         </div>
@@ -77,10 +70,10 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
             placeholder='Last name'
             required
             name='lastName'
-            value={contact.lastName}
+            value={editContact.lastName}
             onChange={onInputChange}
           />
-          <span className='clear' onClick={() => onClearField('lastName')}>
+          <span className='clear' onClick={onClearField}>
             X
           </span>
         </div>
@@ -91,10 +84,10 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
             placeholder='Email'
             required
             name='email'
-            value={contact.email}
+            value={editContact.email}
             onChange={onInputChange}
           />
-          <span className='clear' onClick={() => onClearField('email')}>
+          <span className='clear' onClick={onClearField}>
             X
           </span>
         </div>
@@ -105,10 +98,10 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
             placeholder='Phone'
             required
             name='phone'
-            value={contact.phone}
+            value={editContact.phone}
             onChange={onInputChange}
           />
-          <span className='clear' onClick={() => onClearField('phone')}>
+          <span className='clear' onClick={onClearField}>
             X
           </span>
         </div>
@@ -118,7 +111,7 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
         <button id='save' type='submit'>
           Save
         </button>
-        {contact.id ? (
+        {editContact.id ? (
           <button id='delete' type='button' onClick={onContactDelete}>
             Delete
           </button>
@@ -128,15 +121,10 @@ const ContactForm = ({ contactForEdit, onSubmit, onDelete }) => {
       </div>
     </form>
   );
-};
+  }       
+  export default ContactForm;
+  
 
-const mapStateToProps = (state) => ({
-  contactForEdit: state.contacts.contactForEdit,
-});
 
-const mapDispatchToProps = {
-  onSubmit: addContact, 
-  onDelete: deleteContact, 
-};
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
+   
