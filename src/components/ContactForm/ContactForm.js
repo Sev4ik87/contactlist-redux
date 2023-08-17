@@ -24,7 +24,7 @@ setEditContact({...editContact,[e.target.name]:e.target.value});
 
   const onClearField = (e) => {
     const sibling = e.target.parentNode.firstChild;
-    setEditContact({...editContact,[sibling.name]:''});
+    setEditContact({...editContact, [sibling.name]: '' });
   };
 
   const onFormSubmit = (e) => {
@@ -34,14 +34,14 @@ API.post('/',editContact).then(({data})=>{
   dispatch(createContact(data));
 });
   }else{
-   API.put('/$(editContact.id)',editContact) 
+   API.put(`/${editContact.id}`,editContact) 
    .then(({data})=>dispatch(updateContact(data)))
   }
 }; 
   
 
   const onContactDelete = () => {
-   API.delete('/$(editContact.id)').then(({status})=>
+   API.delete(`/${editContact.id}`).then(({status})=>
    console.log(status));
    dispatch(deleteContact(editContact.id));
   };

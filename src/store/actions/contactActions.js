@@ -1,10 +1,10 @@
 // src/actions/contactActions.js
 import ACTION_TYPES from './actionTypes';
 
-export const addNewContact = (payload) => {
+export const addNewContact = () => {
   return {
     type: ACTION_TYPES.ADD_NEW_CONTACT,
-    payload,
+    
   }
 }
 export const deleteContact = (payload) => {

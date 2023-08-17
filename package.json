@@ -14,7 +14,6 @@
     "react-scripts": "5.0.1",
     "redux": "^4.2.1",
     "redux-devtools-extension": "^2.13.9",
-    "redux-thunk": "^2.4.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -22,7 +21,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "json-server -w db.json -p 5000"
+    "server": "json-server -w db.json -p 5000",
+    "dev": "concurrently \"npm run server\" \"npm run start\""
+
   },
   "eslintConfig": {
     "extends": [
@@ -41,5 +42,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
   }
 }

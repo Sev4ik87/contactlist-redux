@@ -1,25 +1,18 @@
 {
   "contact": [
     {
-      "firstName": "adddd",
-      "lastName": "sobol",
+      "firstName": "adon",
+      "lastName": "dffff",
+      "email": "se8@gmail.com",
+      "phone": "0987845688",
+      "id": 1
+    },
+    {
+      "firstName": "golog",
+      "lastName": "jolop",
       "email": "se8@gmail.com",
       "phone": "0987845688",
       "id": 2
-    },
-    {
-      "firstName": "seva",
-      "lastName": "krot",
-      "email": "se8v7@gmail.com",
-      "phone": "0965656677",
-      "id": 3
-    },
-    {
-      "firstName": "Seva",
-      "lastName": "sobol",
-      "email": "se8@gmail.com",
-      "phone": "0987845688",
-      "id": 4
     }
   ]
 }
