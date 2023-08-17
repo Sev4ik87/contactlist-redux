@@ -25,10 +25,13 @@ export default function contactReducer(
         ...state,
         contacts: state.contacts.map((contact) =>
           contact.id !== payload.id ? contact : payload
-        ),
+        ),contactForEdit: createEmptyContact(),
+
       };
     case ACTION_TYPES.POST_NEW_CONTACT:
-      return { ...state, contacts: [...state.contacts, payload] };
+      return { ...state, contacts: [...state.contacts, payload],
+        contactForEdit: createEmptyContact(),
+      };
     case ACTION_TYPES.SELECT_CONTACT:
       return { ...state, contactForEdit: payload };
     case ACTION_TYPES.GET_CONTACTS:
